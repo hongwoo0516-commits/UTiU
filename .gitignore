@@ -12,5 +12,3 @@ next-env.d.ts
 /artifacts/
 /.vercel/
 .DS_Store
-
-.vercel

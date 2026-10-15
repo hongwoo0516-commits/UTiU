@@ -97,6 +97,14 @@ npm.cmd run build
 npm.cmd run start
 ```
 
-다른 주소로 실행·배포할 때는 `.env.local`의 `AUTH_URL`을 해당 주소로 바꾸세요. 서버에서 MongoDB 연결 정보를 사용하므로 정적 HTML만 내보내는 방식으로는 회원 기능이 실행되지 않습니다. `.env.local`은 Git 제외 대상이며, 이 작업에서는 외부 배포를 하지 않았습니다.
+로컬에서 다른 주소로 실행할 때는 `.env.local`의 `AUTH_URL`을 해당 주소로 바꾸세요. 서버에서 MongoDB 연결 정보를 사용하므로 정적 HTML만 내보내는 방식으로는 회원 기능이 실행되지 않습니다. `.env.local`은 Git과 Vercel 소스 업로드에서 제외됩니다.
+
+## GitHub · Vercel
+
+- 비공개 저장소: https://github.com/hongwoo0516-commits/UTiU
+- Vercel 프로젝트: https://vercel.com/youngwoos-projects-c9a23487/utiu
+- `main` 브랜치에 push하면 Vercel에서 프로덕션 배포를 진행합니다.
+- Vercel의 Production과 Preview 환경에 `MONGODB_URI`, `MONGODB_DB_NAME=utiu`, `AUTH_SECRET`, `AUTH_TRUST_HOST=true`를 설정해야 합니다. 비밀값은 저장소에 추가하지 마세요.
+- Vercel에서는 배포 호스트를 자동 감지하므로 로컬용 `AUTH_URL=http://localhost:3000`을 등록하지 마세요.
 
 구현에 참고한 공식 문서: [Next.js 인증](https://nextjs.org/docs/app/guides/authentication), [Auth.js Credentials](https://authjs.dev/getting-started/providers/credentials), [Mongoose 연결](https://mongoosejs.com/docs/connections.html).
