@@ -27,7 +27,7 @@ export async function getPublicPortfolio(userId: string) {
   const user = await User.findById(userId).select("name bio").lean();
   if (!user) return null;
   const learnings = await Learning.find({ userId, isPublic: true })
-    .select("title category description learnedAt link")
+    .select("title category description learnedAt")
     .sort({ learnedAt: -1, createdAt: -1 }).lean();
   return { user, learnings };
 }

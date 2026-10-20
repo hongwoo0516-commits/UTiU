@@ -3,7 +3,7 @@ import test from "node:test";
 import { learningSchema, loginSchema, registerSchema, postSchema } from "../lib/validation";
 
 const account = { name: "배움이", email: "  STUDENT@example.com  ", password: "study12345", confirmPassword: "study12345" };
-const learning = { title: "Next.js 서버 액션", category: "개발", description: "서버에서 폼을 검증하고 MongoDB에 데이터를 저장하는 흐름을 배웠다.", learnedAt: "2026-10-13", link: "https://nextjs.org/docs", isPublic: false };
+const learning = { title: "Next.js 서버 액션", category: "개발", description: "서버에서 폼을 검증하고 MongoDB에 데이터를 저장하는 흐름을 배웠다.", learnedAt: "2026-10-13", isPublic: false };
 
 test("emails are normalized before lookup and duplicate checks", () => {
   assert.equal(registerSchema.parse(account).email, "student@example.com");
@@ -25,12 +25,6 @@ test("learning dates must be real calendar dates", () => {
     assert.equal(learningSchema.safeParse({ ...learning, learnedAt: date }).success, false);
   }
   assert.equal(learningSchema.safeParse({ ...learning, learnedAt: "2024-02-29" }).success, true);
-});
-test("only HTTP links without embedded credentials are accepted", () => {
-  for (const link of ["javascript:alert(1)", "data:text/html,test", "https://user:secret@example.com", "invalid"]) {
-    assert.equal(learningSchema.safeParse({ ...learning, link }).success, false);
-  }
-  assert.equal(learningSchema.safeParse({ ...learning, link: "" }).success, true);
 });
 test("private records stay private and unsupported categories are rejected", () => {
   assert.equal(learningSchema.parse(learning).isPublic, false);

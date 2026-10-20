@@ -12,5 +12,5 @@ export default async function EditLearningPage({ params }: { params: Promise<{ i
   if (!isRecordId(id)) notFound();
   const record = await Learning.findOne({ _id: id, userId: user.id }).lean();
   if (!record) notFound();
-  return <RecordEditor id={id} initial={{ title: record.title, category: record.category as LearningInput["category"], description: record.description, learnedAt: record.learnedAt, link: record.link, isPublic: record.isPublic }} />;
+  return <RecordEditor id={id} initial={{ title: record.title, category: record.category as LearningInput["category"], description: record.description, learnedAt: record.learnedAt, isPublic: record.isPublic }} />;
 }

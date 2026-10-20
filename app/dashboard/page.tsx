@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Plus, ArrowUpRight, BookOpen, Globe2, LockKeyhole } from 'lucide-react'
 import { getOwnLearnings, requireUser } from '@/lib/data'
 import { LearningCard } from '@/components/learning-card'
-import { ProfileForm } from '@/components/profile-form'
 import { CopyLink } from '@/components/copy-link'
 
 export const metadata: Metadata = {
@@ -51,7 +50,7 @@ export default async function DashboardPage() {
         <div className="portfolio-panel-heading">
           <div>
             <h2>나의 포트폴리오</h2>
-            <p>{user.bio || '관심사와 배움의 방향을 한 줄로 소개해 보세요.'}</p>
+            {user.bio && <p>{user.bio}</p>}
           </div>
           <div className="portfolio-panel-actions">
             <Link href={`/portfolio/${user.id}`} className="button secondary">
@@ -61,7 +60,29 @@ export default async function DashboardPage() {
             <CopyLink path={`/portfolio/${user.id}`} />
           </div>
         </div>
-        <ProfileForm name={user.name} bio={user.bio} />
+      </section>
+      <section className="class-project" aria-labelledby="class-project-title">
+        <div>
+          <h2 id="class-project-title">수업에서 만든 프로젝트</h2>
+        </div>
+        <div className="class-project-actions">
+          <a
+            href="https://github.com/hongwoo0516-commits/my-app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button secondary"
+          >
+            <BookOpen size={17} />GitHub 보기<ArrowUpRight size={16} />
+          </a>
+          <a
+            href="https://my-app-beta-five-89.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button primary"
+          >
+            <Globe2 size={17} />사이트 보기<ArrowUpRight size={16} />
+          </a>
+        </div>
       </section>
       {records.length > 0 && (
         <section className="records-section">

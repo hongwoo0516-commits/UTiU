@@ -23,6 +23,29 @@ test.afterAll(async () => {
   await mongoose.disconnect();
 });
 
+test("presentation project buttons open new tabs and preserve the dashboard", async ({ page, context }) => {
+  await register(page, `project-${email}`);
+  await expect(page).toHaveURL(/\/dashboard$/);
+  const project = page.getByRole("region", { name: "수업에서 만든 프로젝트" });
+  const githubUrl = "https://github.com/hongwoo0516-commits/my-app";
+  const siteUrl = "https://my-app-beta-five-89.vercel.app/";
+  // Check the rendered buttons without depending on external network availability.
+  for (const [name, url] of [["GitHub 보기", githubUrl], ["사이트 보기", siteUrl]]) {
+    await context.route(url, (route) => route.fulfill({ contentType: "text/html", body: "<h1>Project</h1>" }));
+    const link = project.getByRole("link", { name });
+    await expect(link).toHaveAttribute("href", url);
+    await expect(link).toHaveAttribute("target", "_blank");
+    const popupPromise = page.waitForEvent("popup");
+    await link.click();
+    const popup = await popupPromise;
+    await expect(popup).toHaveURL(url);
+    await expect(popup.getByRole("heading", { name: "Project" })).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(project).toBeVisible();
+    await popup.close();
+  }
+});
+
 test("signup, ownership, privacy, edits, login and logout work with MongoDB", async ({ page, browser }) => {
   await page.goto("/dashboard");
   await expect(page).toHaveURL(/\/login$/);
@@ -36,7 +59,7 @@ test("signup, ownership, privacy, edits, login and logout work with MongoDB", as
 
   await page.getByRole("link", { name: "새 기록 작성", exact: true }).click();
   await page.getByLabel("무엇을 배웠나요?").fill("비공개 Next.js 학습 기록");
-  await page.getByLabel("배운 내용과 느낀 점").fill("서버 액션에서 입력을 검증하고 MongoDB에 저장하는 흐름을 배웠다.");
+  await page.getByLabel("내용", { exact: true }).fill("서버 액션에서 입력을 검증하고 MongoDB에 저장하는 흐름을 배웠다.");
   await expect(page.getByLabel("포트폴리오에 공개하기", { exact: false })).not.toBeChecked();
   await page.getByRole("button", { name: "기록 저장하기" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
@@ -81,7 +104,7 @@ test("signup, ownership, privacy, edits, login and logout work with MongoDB", as
   await expect(publicPage.getByRole("heading", { name: "페이지를 찾을 수 없어요" })).toBeVisible();
   await publicPage.goto("/dashboard/new");
   await publicPage.getByLabel("무엇을 배웠나요?").fill("다른 사용자 기록 수정 시도");
-  await publicPage.getByLabel("배운 내용과 느낀 점").fill("이 변경은 서버에서 소유권 검사에 의해 거부되어야 합니다.");
+  await publicPage.getByLabel("내용", { exact: true }).fill("이 변경은 서버에서 소유권 검사에 의해 거부되어야 합니다.");
   await publicPage.locator(".form-stack").evaluate((form, id) => {
     const input = document.createElement("input");
     input.type = "hidden"; input.name = "id"; input.value = id;

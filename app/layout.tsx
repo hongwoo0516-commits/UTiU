@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ko"><body><a href="#main" className="skip-link">본문으로 이동</a><PageShell header={<Header />} footer={<footer className="site-footer"><div className="container footer-inner"><span>배움의 기록, 나의 포트폴리오</span></div></footer>}>{children}</PageShell></body></html>;
+  return <html lang="ko"><body><a href="#main" className="skip-link">본문으로 이동</a><PageShell header={<Header />}>{children}</PageShell></body></html>;
 }

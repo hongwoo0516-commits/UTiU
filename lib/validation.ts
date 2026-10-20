@@ -15,15 +15,6 @@ export const registerSchema = loginSchema.extend({
   path: ["confirmPassword"], message: "비밀번호가 일치하지 않습니다.",
 });
 
-const safeLink = z.string().trim().max(500, "링크는 500자 이내로 입력해 주세요.")
-  .refine((value) => {
-    if (!value) return true;
-    try {
-      const url = new URL(value);
-      return ["http:", "https:"].includes(url.protocol) && !url.username && !url.password;
-    } catch { return false; }
-  }, "http:// 또는 https://로 시작하는 링크를 입력해 주세요.");
-
 export const learningSchema = z.object({
   title: z.string().trim().min(2, "제목은 2자 이상 입력해 주세요.").max(100, "제목은 100자 이내로 입력해 주세요."),
   category: z.enum(categories, { error: "분야를 선택해 주세요." }),
@@ -33,7 +24,6 @@ export const learningSchema = z.object({
     const parsed = new Date(`${value}T00:00:00Z`);
     return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === value && value >= "1900-01-01" && value <= "2100-12-31";
   }, "올바른 학습 날짜를 입력해 주세요."),
-  link: safeLink,
   isPublic: z.boolean(),
 });
 
